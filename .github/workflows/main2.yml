@@ -1,9 +1,9 @@
 name: Create Release on Tag 
 
-    on:
-      push:
-        tag:
-          - '*'
+on:
+  push:
+    tag:
+      - '*'
 
 jobs:
   create_release:
