@@ -6,6 +6,7 @@ on:
       - '*'
 
 jobs:
+
   create_release:
     runs-on: ubuntu-latest
     steps:
@@ -15,9 +16,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: 3.8
 
-      # You can replace this step with any necessary build or script execution steps
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Generate PDF
+        run: |
+          python generate_pdf.py
 
       - name: Create Release
         id: create_release
