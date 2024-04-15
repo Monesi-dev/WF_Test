@@ -1,4 +1,4 @@
-name: Create Release on Tag
+name: Add PDF to Release
 
 on:
   push:
@@ -6,26 +6,17 @@ on:
       - '*'
 
 jobs:
-
   create_release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
+      # Run your script to generate the PDF file
       - name: Generate PDF
-        run: |
-          python generate_pdf.py
+        run: ./generate_pdf.sh  # Replace with the command to generate the PDF file
 
+      # Create a release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -36,7 +27,7 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             Release automatically created for tag ${{ github.ref }}
-            #
+
       # Upload the generated PDF as a release asset
       - name: Upload PDF
         uses: actions/upload-release-asset@v1
@@ -44,6 +35,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./generated_pdf.pdf  # Path to your generated PDF file
+          asset_path: ./path/to/generated_pdf.pdf  # Path to your generated PDF file
           asset_name: my_generated_pdf.pdf  # Name for the PDF file in the release
           asset_content_type: application/pdf
