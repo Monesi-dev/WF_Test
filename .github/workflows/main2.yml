@@ -1,24 +1,32 @@
-name: Create Release on Tag 
+name: Create Release on Tag
 
 on:
   push:
-    tag:
+    tags:
       - '*'
 
 jobs:
   create_release:
-    permissions: write-all
-    name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - name: Create Release
-        uses: actions/create-release@v1
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
-          release_name: Release ${{ steps.extract_tag.outputs.tag_name }}
-          draft: false
-          prerelease: false
-          body: |
-            Release automatically created from tag ${{ steps.extract_tag.outputs.tag_name }}
+          python-version: '3.x'
+
+      # You can replace this step with any necessary build or script execution steps
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Release automatically created for tag ${{ github.ref }}
+
